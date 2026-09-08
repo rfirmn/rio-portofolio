@@ -1,96 +1,63 @@
-# Rio Firman Raharja — Portfolio Website
+<div align="center">
+  <h1>Rio Firman Raharja</h1>
+  <p><strong>Machine Learning & Full-Stack Engineer</strong></p>
+  <p>Building intelligent software systems at the intersection of AI, machine learning, and scalable backend engineering.</p>
 
-Personal portfolio website built with modern creative development standards. Designed for high interactivity, smooth physics-based scrolling, and a clean minimalist aesthetic showcasing expertise across **Machine Learning & Applied AI**, **Backend Architecture**, and **Full-Stack Engineering**.
+  <p>
+    <a href="https://github.com/rfirmn"><strong>Explore Live Site »</strong></a>
+    <br />
+    <br />
+    <a href="mailto:firmanrio59@gmail.com">Get in Touch</a>
+    ·
+    <a href="https://www.linkedin.com/in/rio-firman/">LinkedIn</a>
+    ·
+    <a href="https://drive.google.com/file/d/1eOImNhn3X_4PeXY8WZlqrZ_OIiISacZJ/view?usp=sharing">Resume</a>
+  </p>
+</div>
 
 ---
 
-## ✨ Features & Architecture
+## 🎯 About This Repository
 
-- **Interactive Hero Section:** Dynamic multi-role typewriter animation, real-time availability indicator, interactive 3D mouse-tilt portrait frame, and quick social links.
-- **Curved Dome Morph Transition:** GSAP ScrollTrigger physics-based curved SVG horizon transition expanding smoothly into the About manifesto.
-- **Masked Line-by-Line Scrub Reveal:** Fluid typography reveal synchronized with scroll momentum for narrative storytelling.
-- **Pinned Horizontal Experience Track:** Fullscreen horizontal scrolling mechanism presenting professional timeline and quantifiable impact metrics.
-- **Interactive Project Showcase:** Side-by-side featured project slider with image carousels, role tags, and a dedicated filterable **Projects Archive** page (`/projects`).
-- **Live & Auto-Updating GitHub Tracker:**
-  - Real-time GitHub commit activity for [`@rfirmn`](https://github.com/rfirmn) (320+ contributions, 60+ active days).
-  - Next.js ISR route (`/api/github`) with a **1-week caching schedule** (`s-maxage=604800`) and client-side `localStorage` caching to minimize API calls and prevent rate limiting.
-  - Interactive SVG heatmap grid with commit count and date tooltips.
-- **Staggered Drawer Navigation:** Floating pill navigation with responsive sliding text (`Menu` ⇄ `Close`), morphing hamburger-to-X icon, and high-contrast dark slate drawer with layered accents.
-- **Lenis Smooth Scroll:** Momentum-based buttery smooth scrolling integrated with GSAP animation timelines.
+This repository houses the source code for my personal portfolio website. Built with modern creative development engineering, it focuses on fluid interactions, high runtime performance, and a decoupled architecture between content and presentation.
+
+### Core Architecture & Engineering Highlights:
+- **Physics-Based Kinetic Scroll:** Integrated [Lenis](https://lenis.darkroom.engineering/) and [GSAP ScrollTrigger](https://greensock.com/) to deliver 60fps momentum scrolling, curved horizon morphs, and scrub-synchronized reveals while respecting native browser accessibility.
+- **Data-Driven Decoupling:** All content (persona, narrative manifesto, skills, career history, and project showcases) is strictly typed in TypeScript and isolated in `src/data/`, allowing content iteration without modifying core UI logic.
+- **Smart Weekly GitHub Sync:** Custom Next.js route handler (`/api/github`) with 7-day Incremental Static Regeneration (`s-maxage=604800`) paired with client-side `localStorage` caching to eliminate rate-limit risks while keeping contribution statistics fresh.
+- **Responsive Architecture:** Fully adaptive responsive layouts supporting ultra-wide desktop monitors down to mobile viewports.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework:** [Next.js 16](https://nextjs.org/) (App Router, Turbopack)
-- **Language:** [TypeScript](https://www.typescriptlang.org/)
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animations:** [GSAP (GreenSock)](https://greensock.com/) & [ScrollTrigger](https://greensock.com/scrolltrigger/)
-- **Smooth Scrolling:** [Lenis](https://lenis.darkroom.engineering/)
-- **Typography:** Instrument Serif, Manrope, Geist Mono
-- **Deployment:** Optimized for [Vercel](https://vercel.com/) or any modern Node.js environment
+- **Core Framework:** Next.js 16 (App Router, Turbopack)
+- **Language & Runtime:** TypeScript, React 19, Node.js
+- **Styling & Design System:** Tailwind CSS v4, Vanilla CSS Custom Tokens
+- **Motion & Interactions:** GSAP, ScrollTrigger, Lenis Smooth Scroll
+- **Deployment & Hosting:** Vercel
 
 ---
 
-## 📂 Directory Structure
+## 💻 Local Development
 
-```text
-my-portofolio/
-├── docs/                                # Documentation and guides
-│   └── GUIDE_UPDATE_PROJECTS_AND_EXPERIENCE.md  # Step-by-step content update guide
-├── public/                              # Static public assets
-│   ├── images/
-│   │   ├── avatar/profile.png           # Profile photo
-│   │   ├── experiences/                 # Experience photos & logos
-│   │   └── projects/                    # Project screenshots & mockups
-│   └── icon.svg                         # Site favicon
-├── src/
-│   ├── app/
-│   │   ├── api/github/route.ts          # Weekly-cached GitHub contributions API
-│   │   ├── projects/page.tsx            # Filterable Projects Archive page
-│   │   ├── globals.css                  # Design tokens, theme variables & animations
-│   │   ├── layout.tsx                   # Root layout, metadata & font definitions
-│   │   └── page.tsx                     # Main single-page portfolio view
-│   ├── components/
-│   │   ├── navigation/                  # StaggeredMenu, ProjectsHeader
-│   │   ├── providers/                   # Lenis SmoothScrollProvider
-│   │   ├── sections/                    # Hero, About, Experience, Projects, Github
-│   │   └── shared/                      # Footer, Icons
-│   └── data/
-│       ├── profile.ts                   # Persona, skills, bio, socials & contact
-│       ├── experiences.ts               # Experience timeline items
-│       ├── projects.ts                  # Featured projects & archive repository
-│       └── index.ts                     # Centralized data re-exports
-└── package.json
-```
+To run this project locally on your development environment:
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- **Node.js:** v18.18.0 or higher
-- **Package Manager:** npm, pnpm, or yarn
-
-### 1. Clone the repository
 ```bash
+# 1. Clone the repository
 git clone https://github.com/rfirmn/my-portofolio.git
+
+# 2. Install dependencies
 cd my-portofolio
-```
-
-### 2. Install dependencies
-```bash
 npm install
-```
 
-### 3. Run the development server
-```bash
+# 3. Start development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the portfolio.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-### 4. Build for production
+### Production Build:
 ```bash
 npm run build
 npm run start
@@ -98,31 +65,16 @@ npm run start
 
 ---
 
-## 📝 Updating Portfolio Content
+## 📬 Contact & Opportunities
 
-All personal data, skills, experiences, and projects are centralized in `src/data/` for easy maintenance:
+I am open to discussions regarding engineering opportunities, collaborations, and projects in Machine Learning, Applied AI, and Backend Systems.
 
-| What to Update | File Location | Description |
-| :--- | :--- | :--- |
-| **Identity & Socials** | [`src/data/profile.ts`](src/data/profile.ts) | Name, headline roles, bio manifesto, skills, email, and social links. |
-| **Profile Photo** | `public/images/avatar/profile.png` | Swap the portrait image file with your own photo. |
-| **Experiences** | [`src/data/experiences.ts`](src/data/experiences.ts) | Work history, roles, companies, dates, and key highlights. |
-| **Projects** | [`src/data/projects.ts`](src/data/projects.ts) | Project descriptions, tech stacks, screenshots, and live/repo links. |
-
-> 📖 **Detailed Guide:** See [**docs/GUIDE_UPDATE_PROJECTS_AND_EXPERIENCE.md**](docs/GUIDE_UPDATE_PROJECTS_AND_EXPERIENCE.md) for copy-paste templates and image asset guidelines.
-
----
-
-## 📬 Contact & Links
-
-- **Author:** Rio Firman Raharja
-- **Website:** [rfirmn.dev](https://github.com/rfirmn)
-- **GitHub:** [@rfirmn](https://github.com/rfirmn)
-- **LinkedIn:** [linkedin.com/in/rio-firman](https://www.linkedin.com/in/rio-firman/)
 - **Email:** [firmanrio59@gmail.com](mailto:firmanrio59@gmail.com)
+- **LinkedIn:** [linkedin.com/in/rio-firman](https://www.linkedin.com/in/rio-firman/)
+- **GitHub:** [@rfirmn](https://github.com/rfirmn)
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
+<div align="center">
+  <sub>© 2026 Rio Firman Raharja. All rights reserved. Personal portfolio design and codebase.</sub>
+</div>
