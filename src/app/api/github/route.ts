@@ -74,6 +74,7 @@ export async function GET() {
   try {
     const res = await fetch("https://github-contributions-api.jogruber.de/v4/rfirmn?y=last", {
       next: { revalidate: 604800 }, // 1 week in seconds
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!res.ok) {

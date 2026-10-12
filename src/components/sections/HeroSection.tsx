@@ -13,13 +13,12 @@ import {
 } from "@/components/shared/Icons";
 import { PROFILE } from "@/data";
 
+const roles = PROFILE.roles;
+
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   // Cycling typewriter effect across all roles
-  const roles = PROFILE.roles && PROFILE.roles.length > 0
-    ? PROFILE.roles
-    : ["Machine Learning & Applied AI Engineer", "Backend Engineer", "Full-Stack Engineer"];
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -31,8 +30,10 @@ export function HeroSection() {
     if (!isDeleting && displayText === currentRole) {
       timeout = setTimeout(() => setIsDeleting(true), 2400);
     } else if (isDeleting && displayText === "") {
-      setIsDeleting(false);
-      setRoleIndex((prev) => (prev + 1) % roles.length);
+      timeout = setTimeout(() => {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % roles.length);
+      }, 38);
     } else {
       const speed = isDeleting ? 38 : 75;
       timeout = setTimeout(() => {
@@ -45,7 +46,7 @@ export function HeroSection() {
     }
 
     return () => clearTimeout(timeout);
-  }, [displayText, isDeleting, roleIndex, roles]);
+  }, [displayText, isDeleting, roleIndex]);
 
   // 3D card tilt effect
   const cardRef = useRef<HTMLDivElement>(null);
@@ -120,7 +121,7 @@ export function HeroSection() {
       />
 
       {/* Left Column: Bio & Title */}
-      <div className="relative z-10 max-w-4xl">
+      <div className="relative z-10 min-w-0 max-w-4xl">
         {/* Social Links */}
         <div className="hero-socials mb-4 flex items-center gap-6 sm:mb-5 lg:mb-6">
           <a
@@ -170,9 +171,9 @@ export function HeroSection() {
         </h1>
 
         {/* Typewriter Role */}
-        <div className="inline-block mt-2 sm:mt-3">
+        <div className="mt-2 w-full sm:mt-3">
           <div
-            className="inline-block whitespace-nowrap tracking-tight role text-xl sm:text-4xl lg:text-5xl font-light leading-tight tracking-[0.04em] text-foreground/80"
+            className="role min-h-[2.5em] break-words text-xl font-light leading-tight tracking-tight text-foreground/80 sm:text-4xl xl:text-5xl"
             aria-label={roles[roleIndex % roles.length]}
           >
             <span>{displayText}</span>
@@ -229,7 +230,7 @@ export function HeroSection() {
               src={PROFILE.avatar.src}
               alt={PROFILE.avatar.alt}
               fill
-              priority
+              preload
               className="object-cover object-bottom rounded-[2rem] grayscale hover:grayscale-0 transition-[filter] duration-700 ease-out"
               sizes="(min-width: 1024px) 520px, (min-width: 640px) 450px, 90vw"
             />

@@ -30,8 +30,6 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
       touchMultiplier: 2,
     });
 
-    setLenisInstance(lenis);
-
     // Synchronize Lenis with GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -42,18 +40,21 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
     gsap.ticker.add(updateTicker);
     gsap.ticker.lagSmoothing(0);
 
-    // Reset scroll restoration so browser always starts at top on refresh
+    // Start at the top unless the URL points directly to a section.
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
-    lenis.scrollTo(0, { immediate: true });
-
-    // Refresh ScrollTrigger positions after initialization
-    requestAnimationFrame(() => {
+    if (!window.location.hash) {
       window.scrollTo(0, 0);
       lenis.scrollTo(0, { immediate: true });
+    }
+
+    // Refresh ScrollTrigger positions after initialization
+    const initialFrame = requestAnimationFrame(() => {
+      setLenisInstance(lenis);
       ScrollTrigger.refresh();
+      const target = document.getElementById(window.location.hash.slice(1));
+      lenis.scrollTo(target ?? 0, { immediate: true });
     });
 
     // Global access
@@ -67,6 +68,7 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      cancelAnimationFrame(initialFrame);
       window.removeEventListener("beforeunload", handleBeforeUnload);
       gsap.ticker.remove(updateTicker);
       lenis.destroy();

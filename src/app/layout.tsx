@@ -22,7 +22,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
 export const metadata: Metadata = {
+  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
   title: PROFILE.seo.title,
   description: PROFILE.seo.description,
   icons: {
@@ -32,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: PROFILE.seo.title,
     description: PROFILE.seo.description,
-    url: PROFILE.seo.siteUrl,
+    url: siteUrl,
     siteName: PROFILE.seo.siteName,
     type: "website",
   },

@@ -1,219 +1,204 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
-import { PROJECTS, ProjectItem } from "@/data";
-import { ArrowUpRightIcon } from "@/components/shared/Icons";
+import { PROJECTS, PROJECT_CATEGORIES, type ProjectItem } from "@/data";
+import { ProjectGallery } from "@/components/projects/ProjectGallery";
+import { ArrowUpRightIcon, ChevronRightIcon } from "@/components/shared/Icons";
 
-type DisciplineFilter = "all" | "frontend" | "backend" | "fullstack";
+type ProjectFilter = "all" | ProjectItem["category"];
+
+const FILTERS: Array<{ id: ProjectFilter; label: string }> = [
+  { id: "all", label: "All projects" },
+  ...Object.entries(PROJECT_CATEGORIES).map(([id, label]) => ({
+    id: id as ProjectItem["category"],
+    label,
+  })),
+];
 
 export function ProjectsArchive() {
-  const [filter, setFilter] = useState<DisciplineFilter>("all");
-
-  const filteredProjects = PROJECTS.filter((p) => {
-    if (filter === "all") return true;
-    return p.category === filter;
-  });
-
-  const countByDiscipline = {
-    all: PROJECTS.length,
-    frontend: PROJECTS.filter((p) => p.category === "frontend").length,
-    backend: PROJECTS.filter((p) => p.category === "backend").length,
-    fullstack: PROJECTS.filter((p) => p.category === "fullstack").length,
-  };
+  const [filter, setFilter] = useState<ProjectFilter>("all");
+  const filteredProjects = PROJECTS.filter((project) => filter === "all" || project.category === filter);
 
   return (
-    <div className="w-full px-6 py-12 sm:px-10 lg:px-24 max-w-7xl mx-auto">
-      {/* Hero Section */}
-      <div className="relative mb-16 sm:mb-20">
-        {/* Background Watermark */}
+    <div className="mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 lg:px-24">
+      <div className="relative mb-14 sm:mb-20">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute right-0 -top-10 flex select-none text-[clamp(6rem,18vw,16rem)] font-bold leading-none tracking-[-0.07em] text-foreground/[0.045] blur-[1px]"
+          className="pointer-events-none absolute -top-10 right-0 select-none text-[clamp(6rem,18vw,16rem)] font-bold leading-none tracking-[-0.07em] text-foreground/[0.045] blur-[1px]"
         >
           WORK
         </div>
-
         <div className="relative z-10 max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-[0.25em] text-foreground/60">
-            Project Index / 0{PROJECTS.length}
+            Independent projects / {String(PROJECTS.length).padStart(2, "0")}
           </p>
-          <h1 className="mt-3 text-5xl sm:text-7xl lg:text-8xl font-bold uppercase tracking-[-0.04em] text-foreground leading-[0.95]">
-            All projects.
+          <h1 className="mt-4 text-5xl font-bold uppercase leading-[0.95] tracking-[-0.04em] sm:text-7xl lg:text-8xl">
+            Ideas,<br /><span className="font-serif font-normal lowercase italic text-primary">engineered.</span>
           </h1>
-          <p className="mt-6 text-base sm:text-xl text-foreground/75 leading-relaxed font-light">
-            A growing archive of digital products, internal systems, and web experiences — from interface craft to fullstack delivery.
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-foreground/75 sm:text-lg">
+            Applied AI is my primary focus, from retrieval to live insights and evidence-backed research.
+            I also build native iOS apps in Swift and cross-platform products with Flutter.
           </p>
-
-          <div className="mt-6">
-            <a
-              href="#projects-grid"
-              className="inline-flex items-center gap-1.5 border-b border-foreground/80 pb-1 font-mono text-xs uppercase tracking-[0.18em] font-semibold text-foreground hover:opacity-75 transition-opacity"
-            >
-              <span>Open Project Archive</span>
-              <ArrowUpRightIcon className="w-3.5 h-3.5" />
-            </a>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {PROJECTS.filter((project) => project.featured).map((project) => (
+              <a
+                key={project.id}
+                href={`#${project.id}`}
+                onClick={() => setFilter("all")}
+                className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/10"
+              >
+                {project.name} <ArrowUpRightIcon className="size-3.5" />
+              </a>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div
-        id="projects-grid"
-        className="pt-10 border-t border-foreground/10 mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6"
-      >
+      <div className="mb-10 flex flex-col justify-between gap-5 border-t border-foreground/15 pt-8 md:flex-row md:items-end">
         <div>
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-foreground/60 mb-3 font-semibold">
-            Filter by discipline
+          <p className="mb-3 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.25em] text-foreground/55">
+            Explore by focus
           </p>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setFilter("all")}
-              className={`font-mono text-[0.65rem] uppercase tracking-[0.14em] font-semibold px-4 py-2 rounded-full transition-all ${
-                filter === "all"
-                  ? "bg-foreground text-background"
-                  : "border border-foreground/15 text-foreground/80 hover:border-foreground/40"
-              }`}
-            >
-              All Projects 0{countByDiscipline.all}
-            </button>
-            <button
-              onClick={() => setFilter("frontend")}
-              className={`font-mono text-[0.65rem] uppercase tracking-[0.14em] font-semibold px-4 py-2 rounded-full transition-all ${
-                filter === "frontend"
-                  ? "bg-foreground text-background"
-                  : "border border-foreground/15 text-foreground/80 hover:border-foreground/40"
-              }`}
-            >
-              Frontend 0{countByDiscipline.frontend}
-            </button>
-            <button
-              onClick={() => setFilter("backend")}
-              className={`font-mono text-[0.65rem] uppercase tracking-[0.14em] font-semibold px-4 py-2 rounded-full transition-all ${
-                filter === "backend"
-                  ? "bg-foreground text-background"
-                  : "border border-foreground/15 text-foreground/80 hover:border-foreground/40"
-              }`}
-            >
-              Backend 0{countByDiscipline.backend}
-            </button>
-            <button
-              onClick={() => setFilter("fullstack")}
-              className={`font-mono text-[0.65rem] uppercase tracking-[0.14em] font-semibold px-4 py-2 rounded-full transition-all ${
-                filter === "fullstack"
-                  ? "bg-foreground text-background"
-                  : "border border-foreground/15 text-foreground/80 hover:border-foreground/40"
-              }`}
-            >
-              Fullstack 0{countByDiscipline.fullstack}
-            </button>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter projects by focus">
+            {FILTERS.map(({ id, label }) => {
+              const count = PROJECTS.filter((project) => id === "all" || project.category === id).length;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setFilter(id)}
+                  aria-pressed={filter === id}
+                  className={`rounded-full border px-4 py-2.5 font-mono text-[0.6rem] font-semibold uppercase tracking-wider transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${filter === id
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-foreground/15 text-foreground/70 hover:border-foreground/40"}`}
+                >
+                  {label} <span className="ml-1 opacity-60">{String(count).padStart(2, "0")}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
-
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60">
-          Showing 0{filteredProjects.length} Projects
+        <p aria-live="polite" className="shrink-0 font-mono text-[0.6rem] uppercase tracking-wider text-foreground/55">
+          {String(filteredProjects.length).padStart(2, "0")} projects
         </p>
       </div>
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-        {filteredProjects.map((project, idx) => {
-          const coverImage = project.images?.[0]?.src;
-          return (
-            <article
-              key={project.id}
-              className="group min-w-0 flex flex-col justify-between rounded-2xl border border-foreground/10 bg-card p-6 sm:p-8 transition-all duration-300 hover:shadow-xl hover:border-foreground/25"
-            >
-              <div>
-                {/* Image Showcase */}
-                <div className="relative aspect-[16/10] overflow-hidden rounded-xl bg-[#111114] mb-6">
-                  {coverImage && (
-                    <Image
-                      src={coverImage}
-                      alt={project.name}
-                      fill
-                      priority={idx === 0}
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                    />
-                  )}
-                  {/* Category Pill */}
-                  <div className="absolute top-3.5 left-3.5 z-10">
-                    <span className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full bg-black/60 text-white backdrop-blur-md">
-                      {project.category}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Meta details */}
-                <div className="flex items-center justify-between gap-4 mb-2">
-                  <p className="font-mono text-xs uppercase tracking-[0.15em] text-foreground/60">
-                    {project.experienceLabel}
-                  </p>
-                  <span className="font-serif text-lg font-bold text-foreground/40">
-                    {project.number || `0${idx + 1}`}
-                  </span>
-                </div>
-
-                <h2 className="text-2xl sm:text-3xl font-extrabold uppercase tracking-tight text-foreground group-hover:text-foreground/80 transition-colors">
+      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:gap-10">
+        {filteredProjects.map((project) => (
+          <article
+            key={project.id}
+            id={project.id}
+            className={`min-w-0 scroll-mt-8 overflow-hidden rounded-3xl border bg-card ${project.featured ? "border-primary/25" : "border-foreground/10"}`}
+          >
+            <div className="p-5 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3 font-mono text-[0.56rem] uppercase tracking-wider">
+                <span className={project.featured ? "font-semibold text-primary" : "text-foreground/55"}>
+                  {project.featured ? "Featured / Applied AI" : PROJECT_CATEGORIES[project.category]}
+                </span>
+                <span className="text-foreground/40">Project {project.number}</span>
+              </div>
+              <ProjectGallery project={project} />
+              <div className="mt-5">
+                <p className="font-mono text-[0.56rem] uppercase leading-relaxed tracking-wider text-foreground/55">
+                  {project.role}
+                </p>
+                <h2 className="mt-2 text-2xl font-extrabold uppercase leading-tight tracking-tight sm:text-3xl">
                   {project.name}
                 </h2>
+                <p className="mt-3 font-serif text-xl italic leading-snug text-primary">{project.tagline}</p>
+                <p className="mt-4 text-sm leading-relaxed text-foreground/75">{project.summary}</p>
+              </div>
 
-                <p className="mt-4 text-sm sm:text-base text-foreground/75 leading-relaxed">
-                  {project.summary}
-                </p>
+              <ul className="mt-5 space-y-2">
+                {project.highlights.map((highlight) => (
+                  <li key={highlight} className="flex items-start gap-2 text-xs leading-relaxed text-foreground/75">
+                    <span aria-hidden="true" className="mt-1.5 size-1 shrink-0 rounded-full bg-primary" />
+                    {highlight}
+                  </li>
+                ))}
+              </ul>
 
-                {/* Impact Stats */}
-                {project.impactStats && project.impactStats.length > 0 && (
-                  <div className="mt-6 flex items-center gap-6 border-y border-foreground/10 py-3">
-                    {project.impactStats.map((stat, sIdx) => (
-                      <div key={sIdx}>
-                        <span className="font-serif text-2xl font-bold text-foreground">
-                          {stat.value}+
-                        </span>{" "}
-                        <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-foreground/60">
-                          {stat.label}
-                        </span>
-                      </div>
-                    ))}
+              <div className="mt-6 grid grid-cols-2 gap-4 border-y border-foreground/10 py-4">
+                {project.impactStats.map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-base font-bold tracking-tight">{stat.value}</p>
+                    <p className="mt-1 text-[0.6rem] leading-relaxed text-foreground/55">{stat.label}</p>
                   </div>
-                )}
+                ))}
+              </div>
 
-                {/* Tech Badges */}
-                {project.techStack && (
-                  <div className="mt-6 flex flex-wrap gap-1.5">
-                    {project.techStack.map((tech, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="font-mono text-[0.6rem] uppercase tracking-[0.08em] px-2.5 py-1 rounded-full border border-foreground/15 text-foreground/70"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {project.techStack.map((tech) => (
+                  <span key={tech} className="rounded-full border border-foreground/15 px-2.5 py-1 font-mono text-[0.56rem] text-foreground/70">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <span className="font-mono text-[0.56rem] uppercase tracking-wider text-foreground/50">{project.status}</span>
+                {project.link?.githubUrl && (
+                  <a
+                    href={project.link.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`View ${project.name} source on GitHub (new tab)`}
+                    className="inline-flex items-center gap-1 border-b border-foreground/25 pb-0.5 font-mono text-[0.6rem] font-semibold uppercase tracking-wider hover:text-primary"
+                  >
+                    View source <ArrowUpRightIcon className="size-3" />
+                  </a>
                 )}
               </div>
-            </article>
-          );
-        })}
+            </div>
+
+            <details className="group/case border-t border-foreground/10">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 text-sm font-semibold transition-colors hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary sm:px-6 [&::-webkit-details-marker]:hidden">
+                Explore the case study
+                <ChevronRightIcon className="size-4 shrink-0 transition-transform group-open/case:rotate-90" />
+              </summary>
+              <div className="space-y-6 px-5 pb-6 text-sm leading-relaxed text-foreground/75 sm:px-6">
+                <div>
+                  <h3 className="mb-2 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-primary">The problem</h3>
+                  <p>{project.problem}</p>
+                </div>
+                <div>
+                  <h3 className="mb-3 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-primary">What I built</h3>
+                  <ol className="space-y-3">
+                    {project.contributions.map((contribution, index) => (
+                      <li key={contribution} className="flex gap-3">
+                        <span className="mt-0.5 shrink-0 font-mono text-[0.6rem] text-foreground/40">{String(index + 1).padStart(2, "0")}</span>
+                        <span>{contribution}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-primary">The engineering decision</h3>
+                  <p>{project.engineeringDecision}</p>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-primary">The result</h3>
+                  <p>{project.impactSummary}</p>
+                </div>
+                <div className="rounded-xl border border-foreground/10 bg-background p-4">
+                  <h3 className="mb-2 font-mono text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-foreground/55">Demo & verification</h3>
+                  <p className="text-xs leading-relaxed text-foreground/65">{project.scope}</p>
+                </div>
+              </div>
+            </details>
+          </article>
+        ))}
       </div>
 
-      {/* CTA Box at Bottom */}
-      <div className="mt-20 sm:mt-28 rounded-3xl bg-[#0d121c] text-white p-8 sm:p-14 lg:p-16 flex flex-col lg:flex-row lg:items-center justify-between gap-8 border border-white/10">
+      <div className="mt-20 flex flex-col justify-between gap-8 rounded-3xl border border-white/10 bg-[#0d121c] p-8 text-white sm:mt-28 sm:p-12 lg:flex-row lg:items-center">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.24em] text-sky-400 font-semibold">
-            Have a project in mind?
-          </p>
-          <h2 className="mt-4 text-4xl sm:text-6xl font-bold tracking-tight text-white leading-[0.95]">
-            Let’s build something useful.
-          </h2>
+          <p className="font-mono text-[0.6rem] font-semibold uppercase tracking-[0.24em] text-sky-400">Open to engineering opportunities</p>
+          <h2 className="mt-4 max-w-xl text-3xl font-bold leading-tight tracking-tight sm:text-5xl">Looking for someone who connects AI to real products?</h2>
+          <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60">My primary focus is applied AI. I’m also open to iOS developer roles, with hands-on SwiftUI, UIKit, and native app projects. Let’s talk about what your team is building.</p>
         </div>
-        <Link
-          href="/#contact"
-          className="inline-flex w-fit border-b border-white/70 pb-1.5 font-mono text-xs uppercase tracking-[0.2em] font-semibold text-white hover:text-sky-400 hover:border-sky-400 hover:opacity-100 transition-all shrink-0"
-        >
-          Start a conversation
+        <Link href="/#contact" className="inline-flex w-fit shrink-0 items-center gap-2 border-b border-white/70 pb-2 font-mono text-xs font-semibold uppercase tracking-wider transition-colors hover:border-sky-400 hover:text-sky-400">
+          Start a conversation <ArrowUpRightIcon className="size-4" />
         </Link>
       </div>
     </div>

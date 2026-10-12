@@ -41,7 +41,6 @@ export interface ProfileConfig {
   seo: {
     title: string;
     description: string;
-    siteUrl: string;
     siteName: string;
   };
 }
@@ -53,6 +52,7 @@ export const PROFILE: ProfileConfig = {
   brandTitle: "Rio / Portfolio",
   roles: [
     "Machine Learning & Applied AI Engineer",
+    "iOS Developer · Swift",
     "Backend Engineer",
     "Full-Stack Engineer",
   ],
@@ -65,16 +65,20 @@ export const PROFILE: ProfileConfig = {
   narrative: {
     lines: [
       { normal: "I build intelligent software systems at the ", bold: "intersection of AI, machine learning, " },
-      { normal: "and modern engineering, ", bold: "turning ideas and experiments " },
-      { normal: "into ", bold: "reliable, scalable solutions " },
-      { normal: "that connect intelligent technologies with ", bold: "real-world applications " },
-      { normal: "built to be ", bold: "thoughtful, scalable, and impactful." },
+      { normal: "and product engineering. My primary focus is ", bold: "AI that solves real problems, " },
+      { normal: "backed by ", bold: "reliable software systems. " },
+      { normal: "I also build ", bold: "native iOS apps in Swift, " },
+      { normal: "bringing the same care to ", bold: "mobile experiences and everyday workflows." },
     ],
   },
   skills: [
     "Python",
     "PyTorch",
     "LangChain",
+    "Swift",
+    "SwiftUI",
+    "UIKit",
+    "Flutter",
     "Go",
     "TypeScript",
     "Next.js",
@@ -108,10 +112,9 @@ export const PROFILE: ProfileConfig = {
     activeDays: 66,
   },
   seo: {
-    title: "Rio Firman Raharja | Machine Learning & Full-Stack Engineer",
+    title: "Rio Firman Raharja | Applied AI & iOS Engineer",
     description:
-      "Explore Rio Firman Raharja's portfolio: Machine Learning & Applied AI Engineer, Backend Engineer, and Full-Stack Developer building intelligent, scalable systems.",
-    siteUrl: "https://github.com/rfirmn",
+      "Rio Firman Raharja focuses on applied AI and builds native Swift iOS apps. Explore Strata PDA, Streamly, Market Intelligence, SwiftUI and UIKit projects, and Flutter apps for Android and iOS.",
     siteName: "Rio Portfolio",
   },
 };

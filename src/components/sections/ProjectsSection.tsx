@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Image from "next/image";
+import React, { useRef } from "react";
 import Link from "next/link";
-import { PROJECTS, ProjectItem, ProjectImage } from "@/data";
-import { ChevronLeftIcon, ChevronRightIcon, ArrowUpRightIcon } from "@/components/shared/Icons";
+import { PROJECTS, type ProjectItem } from "@/data";
+import { ProjectGallery } from "@/components/projects/ProjectGallery";
+import { ArrowUpRightIcon } from "@/components/shared/Icons";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,21 +12,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 function ProjectCard({ project, index }: { project: ProjectItem; index: number }) {
-  const [imageIndex, setImageIndex] = useState(0);
-  const images: ProjectImage[] = project.images || [];
-
-  const prevImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const nextImage = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setImageIndex((prev) => (prev + 1) % images.length);
-  };
-
   const isReversed = index % 2 !== 0;
 
   return (
@@ -36,66 +21,8 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
         isReversed ? "lg:[direction:rtl]" : ""
       }`}
     >
-      {/* Left: Media Gallery */}
       <div className="lg:[direction:ltr]">
-        <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-[#111114] border border-foreground/10 shadow-lg group">
-          {images.length > 0 && (
-            <Image
-              src={images[imageIndex]?.src}
-              alt={images[imageIndex]?.alt || project.name}
-              fill
-              priority={index === 0}
-              className="object-cover transition-opacity duration-300"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-            />
-          )}
-
-          {/* Slider Arrow Buttons */}
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-xs text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 z-10"
-                aria-label="Previous image"
-              >
-                <ChevronLeftIcon className="w-4 h-4" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 backdrop-blur-xs text-white flex items-center justify-center transition-all opacity-80 hover:opacity-100 z-10"
-                aria-label="Next image"
-              >
-                <ChevronRightIcon className="w-4 h-4" />
-              </button>
-            </>
-          )}
-
-          {/* Category Pill on top-left */}
-          <div className="absolute top-4 left-4 z-10">
-            <span className="font-mono text-[0.58rem] font-semibold uppercase px-2.5 py-1 rounded-full bg-black/60 text-white backdrop-blur-md border border-white/15 tracking-wider">
-              {project.category}
-            </span>
-          </div>
-        </div>
-
-        {/* Caption & Indicators */}
-        <div className="mt-3 flex items-center justify-between text-xs text-foreground/60 font-mono">
-          <p className="tracking-wide">
-            0{imageIndex + 1} / 0{images.length} · {images[imageIndex]?.label || "Preview"}
-          </p>
-          <div className="flex items-center gap-1.5">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setImageIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  imageIndex === i ? "w-5 bg-foreground" : "w-1.5 bg-foreground/25"
-                }`}
-                aria-label={`Go to image ${i + 1}`}
-              />
-            ))}
-          </div>
-        </div>
+        <ProjectGallery project={project} />
       </div>
 
       {/* Right: Content */}
@@ -108,7 +35,7 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
           </div>
 
           <Link
-            href="/projects"
+            href={`/projects#${project.id}`}
             className="group/title inline-flex items-start gap-2.5 mt-1"
           >
             <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold uppercase leading-[1.08] tracking-tight decoration-foreground/35 decoration-1 underline-offset-6 group-hover/title:underline">
@@ -117,6 +44,9 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
             <ArrowUpRightIcon className="mt-1 size-5 shrink-0 text-foreground/40 transition-transform duration-300 group-hover/title:-translate-y-0.5 group-hover/title:translate-x-0.5" />
           </Link>
 
+          <p className="mt-3 font-serif text-xl italic text-primary sm:text-2xl">
+            {project.tagline}
+          </p>
           <p className="mt-4 text-sm sm:text-base leading-relaxed text-foreground/75 max-w-[55ch]">
             {project.summary}
           </p>
@@ -141,6 +71,15 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
           </div>
         )}
 
+        <div className="mt-6 grid grid-cols-3 gap-3 border-y border-foreground/10 py-4">
+          {project.impactStats.map((stat) => (
+            <div key={stat.label}>
+              <p className="text-sm font-bold sm:text-base">{stat.value}</p>
+              <p className="mt-1 text-[0.6rem] leading-relaxed text-foreground/55">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Tech Stack */}
         {project.techStack && (
           <div className="mt-6 flex flex-wrap gap-1.5">
@@ -154,6 +93,12 @@ function ProjectCard({ project, index }: { project: ProjectItem; index: number }
             ))}
           </div>
         )}
+        <Link
+          href={`/projects#${project.id}`}
+          className="mt-6 inline-flex w-fit items-center gap-2 border-b border-foreground/30 pb-1 font-mono text-[0.65rem] font-semibold uppercase tracking-wider hover:border-primary hover:text-primary"
+        >
+          Explore the case study <ArrowUpRightIcon className="size-4" />
+        </Link>
       </div>
     </article>
   );
@@ -212,22 +157,24 @@ export function ProjectsSection() {
           }
 
           if (isDesktop) {
-            // Parallax sheet rising transition over Experience section
-            gsap.fromTo(
-              section,
-              { yPercent: 16 },
-              {
-                yPercent: 0,
-                ease: "power2.out",
-                scrollTrigger: {
-                  trigger: section,
-                  start: "top bottom",
-                  end: "top 58%",
-                  scrub: 0.65,
-                  invalidateOnRefresh: true,
-                },
-              }
-            );
+            // Keep initial anchor coordinates stable when opening a project group directly.
+            if (!["#projects", "#ios-projects"].includes(window.location.hash)) {
+              gsap.fromTo(
+                section,
+                { yPercent: 16 },
+                {
+                  yPercent: 0,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom",
+                    end: "top 58%",
+                    scrub: 0.65,
+                    invalidateOnRefresh: true,
+                  },
+                }
+              );
+            }
 
             // Watermark parallax
             gsap.fromTo(
@@ -293,31 +240,90 @@ export function ProjectsSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Section Header */}
-        <div className="mb-16 flex items-end justify-between gap-6 border-b border-foreground/10 pb-8 sm:mb-20">
+        <div className="mb-16 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end border-b border-foreground/10 pb-8 sm:mb-20">
           <div>
             <p className="font-mono text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.28em] text-foreground/50">
-              Featured Archive
+              Selected work / Applied AI
             </p>
             <p className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-[-0.03em] text-foreground">
-              Selected projects
+              AI, put to work.
+            </p>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-foreground/65 sm:text-base">
+              Three different problems. One focus: useful AI, grounded in context,
+              connected to reliable systems, and built for people.
             </p>
           </div>
 
-          <Link
-            href="/projects"
-            className="group inline-flex items-center gap-2 border-b border-foreground/30 pb-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-foreground hover:border-foreground transition-colors"
-          >
-            <span>View all projects</span>
-            <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+          <div className="flex shrink-0 flex-col items-start gap-4 sm:items-end">
+            <Link
+              href="/projects"
+              className="group inline-flex items-center gap-2 border-b border-foreground/30 pb-1 font-mono text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-foreground hover:border-foreground transition-colors"
+            >
+              <span>View all projects</span>
+              <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
+            <a href="#ios-projects" className="inline-flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-wider text-primary underline underline-offset-4">
+              Explore Swift / iOS <ArrowUpRightIcon className="size-3.5" />
+            </a>
+          </div>
         </div>
 
         {/* Project Cards Sequence */}
         <div ref={containerRef} className="space-y-24 sm:space-y-32">
-          {PROJECTS.map((project, idx) => (
+          {PROJECTS.filter((project) => project.featured).map((project, idx) => (
             <ProjectCard key={project.id} project={project} index={idx} />
           ))}
         </div>
+
+        <section id="ios-projects" aria-labelledby="ios-projects-heading" className="mt-24 scroll-mt-8 border-t border-foreground/15 pt-10 sm:mt-32">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-foreground/55">
+            Native iOS / Swift · 03 projects
+          </p>
+          <h3 id="ios-projects-heading" className="mt-3 text-2xl font-bold tracking-tight sm:text-4xl">Built for iOS. Written in Swift.</h3>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-foreground/65 sm:text-base">
+            UIKit and SwiftUI interfaces, durable uploads, local persistence, and AR experiences.
+            Three native apps that show how I build beyond the model and into the hands of users.
+          </p>
+          <div className="mt-8 grid items-start gap-8 md:grid-cols-3">
+            {PROJECTS.filter((project) => project.category === "ios").map((project) => (
+              <article key={project.id} className="min-w-0">
+                <ProjectGallery project={project} />
+                <Link href={`/projects#${project.id}`} className="group mt-5 flex items-start justify-between gap-3">
+                  <h4 className="text-xl font-bold leading-tight tracking-tight group-hover:text-primary">{project.name}</h4>
+                  <ArrowUpRightIcon className="mt-0.5 size-4 shrink-0 text-foreground/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </Link>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/65">{project.tagline}</p>
+                <p className="mt-3 text-xs leading-relaxed text-foreground/75">{project.highlights[0]}</p>
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {project.techStack.slice(0, 3).map((tech) => (
+                    <span key={tech} className="rounded-full border border-foreground/15 px-2.5 py-1 font-mono text-[0.6rem] text-foreground/65">{tech}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="cross-platform-heading" className="mt-14 border-t border-foreground/15 pt-8 sm:mt-20">
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-foreground/55">Cross-platform / Flutter & Web</p>
+          <h3 id="cross-platform-heading" className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">One product. Android, iOS, and web.</h3>
+          <div className="mt-2">
+            {PROJECTS.filter((project) => project.category === "fullstack").map((project) => (
+              <Link
+                key={project.id}
+                href={`/projects#${project.id}`}
+                className="group flex items-start justify-between gap-4 border-b border-foreground/10 py-6"
+              >
+                <div className="max-w-3xl">
+                  <p className="font-mono text-[0.6rem] uppercase tracking-wider text-foreground/50">{project.role}</p>
+                  <p className="mt-2 text-xl font-bold group-hover:text-primary">{project.name}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/65">{project.summary}</p>
+                </div>
+                <ArrowUpRightIcon className="mt-1 size-5 shrink-0 text-foreground/50 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   );

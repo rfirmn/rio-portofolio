@@ -15,10 +15,9 @@ interface MenuItem {
 const MENU_ITEMS: MenuItem[] = [
   { title: "Home", href: "/#home", index: "01" },
   { title: "About", href: "/#about", index: "02" },
-  { title: "Experience", href: "/#experience", index: "03" },
-  { title: "Projects", href: "/#projects", index: "04" },
-  { title: "All Projects", href: "/projects", index: "05" },
-  { title: "Contact", href: "/#contact", index: "06" },
+  { title: "Projects", href: "/#projects", index: "03" },
+  { title: "All Projects", href: "/projects", index: "04" },
+  { title: "Contact", href: "/#contact", index: "05" },
 ];
 
 export function StaggeredMenu() {

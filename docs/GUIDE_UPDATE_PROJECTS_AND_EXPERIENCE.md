@@ -1,5 +1,7 @@
 # Panduan Mengupdate Data Project & Experience
 
+> Bagian Experience dan tautan menunya saat ini disembunyikan karena Rio telah mengonfirmasi bahwa data contoh bukan pengalamannya. Data pengalaman contoh dan asetnya sudah dihapus; array `EXPERIENCES` kini kosong. Berkas `src/data/experiences.ts` dan komponennya tetap tersedia. Setelah data pengalaman asli diisi, aktifkan kembali `ExperienceSection` di `src/app/page.tsx` dan tautan `/#experience` di menu.
+
 Dokumentasi lengkap ini dibuat untuk memandu Anda mengupdate, menambah, atau menghapus data **Projects** dan **Experiences** di portofolio Anda kapan pun Anda siap.
 
 ---
@@ -8,9 +10,9 @@ Dokumentasi lengkap ini dibuat untuk memandu Anda mengupdate, menambah, atau men
 
 | Komponen | Berkas Data (TypeScript) | Folder Aset Gambar |
 | :--- | :--- | :--- |
-| **Experience** | [`src/data/experiences.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/experiences.ts) | `public/images/experiences/` |
-| **Projects** | [`src/data/projects.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/projects.ts) | `public/images/projects/[project-id]/` |
-| **Export Index** | [`src/data/index.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/index.ts) | *(Menggabungkan seluruh export data)* |
+| **Experience** | [`src/data/experiences.ts`](../src/data/experiences.ts) | `public/images/experiences/` |
+| **Projects** | [`src/data/projects.ts`](../src/data/projects.ts) | `public/images/projects/[project-id]/` |
+| **Export Index** | [`src/data/index.ts`](../src/data/index.ts) | *(Menggabungkan seluruh export data)* |
 
 ---
 
@@ -44,7 +46,7 @@ export interface ExperienceItem {
 ```
 
 ### 2. Template Siap Pakai untuk Menambah Experience Baru
-Buka [`src/data/experiences.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/experiences.ts), lalu tambahkan objek berikut ke dalam array `EXPERIENCES`:
+Buka [`src/data/experiences.ts`](../src/data/experiences.ts), lalu tambahkan objek berikut ke dalam array `EXPERIENCES`:
 
 ```typescript
 {
@@ -83,102 +85,43 @@ Buka [`src/data/experiences.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_
 
 ## 🚀 BAGIAN 2: Mengupdate & Menambah Project
 
-Data Project muncul di dua tempat:
-1. **Homepage (#projects):** Menampilkan proyek-proyek unggulan yang memiliki nilai `featured: true`.
-2. **Projects Archive (/projects):** Menampilkan **seluruh** proyek dengan filter kategori (*All*, *Frontend*, *Backend*, *Fullstack*).
+Data proyek muncul di dua tempat:
+1. **Homepage (#projects):** Menampilkan tiga proyek AI dengan `featured: true` sebagai sorotan utama. Kelompok **Swift / iOS (#ios-projects)** menampilkan galeri Slate, BrandLens, dan Personal Money Tracker. Kelompok **Flutter & Web** menampilkan Rantang, termasuk aplikasi seller Android/iOS.
+2. **Projects Archive (/projects):** Menampilkan seluruh proyek dengan filter **All projects**, **Applied AI**, **Swift / iOS**, dan **Flutter & Web**. Setiap kartu memiliki galeri dan studi kasus yang dapat dibuka.
 
-### 1. Struktur Objek Project (`ProjectItem`)
-Struktur data di [`src/data/projects.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/projects.ts):
+### 1. Susunan proyek saat ini
 
-```typescript
-export interface ProjectItem {
-  databaseId: string;
-  id: string;               // Slug unik (contoh: "ai-rag-agent", "pos-backend")
-  number: string;           // Nomor urut (contoh: "01", "02", "03")
-  name: string;             // Nama Proyek (contoh: "Intelligent Document RAG Pipeline")
-  role: string;             // Peran Anda (contoh: "AI Engineer", "Backend Developer")
-  category: "frontend" | "backend" | "fullstack"; // Kategori filter di /projects
-  featured: boolean;        // true = tampil di Homepage, false = hanya di arsip /projects
-  status: string;           // "active"
-  experienceId?: string;    // (Opsional) Menghubungkan ke id Experience di atas
-  experienceLabel?: string; // (Opsional) Label perusahaan (contoh: "PT. Maju Bersama")
-  summary: string;          // Deskripsi lengkap proyek (1 paragraf ringkas)
-  contributions: string[];  // Poin-poin kontribusi Anda (tampil di /projects)
-  highlights?: string[];    // Poin-poin sorotan ringkas (tampil di Homepage)
-  techStack?: string[];     // Array teknologi (contoh: ["Python", "PyTorch", "Qdrant", "FastAPI"])
-  images: ProjectImage[];   // Array screenshot / mockups proyek
-  link?: {
-    liveUrl?: string;       // URL demo langsung (kosongkan jika internal/privat)
-    githubUrl?: string;     // URL repositori GitHub (kosongkan jika privat)
-  } | null;
-  updatedAt: string;
-}
-```
+| Urutan | Proyek | Kategori | Featured |
+| --- | --- | --- | --- |
+| 01 | Strata PDA | `ai` | Ya |
+| 02 | Streamly | `ai` | Ya |
+| 03 | Market Intelligence / Signalroom | `ai` | Ya |
+| 04 | Rantang | `fullstack` | Tidak |
+| 05 | Slate | `ios` | Tidak |
+| 06 | BrandLens | `ios` | Tidak |
+| 07 | Personal Money Tracker | `ios` | Tidak |
 
-### 2. Template Siap Pakai untuk Menambah Proyek Baru
-Buka [`src/data/projects.ts`](file:///Users/rio/Documents/RIO/Pemrograman/my_product/my-portofolio/src/data/projects.ts), lalu tambahkan objek berikut ke dalam array `PROJECTS`:
+Materi diambil dari `../[project-id]/porto_documentation/`. Aset yang dipilih disalin dan dikompresi ke `public/images/projects/[project-id]/`, sehingga situs tidak bergantung pada keberadaan direktori proyek di server deployment. Screenshot Streamly dipangkas pada area aplikasi untuk membuang margin desktop kosong; isi antarmuka tetap dipertahankan.
 
-```typescript
-{
-  databaseId: "proj-" + Date.now(),
-  id: "ai-financial-rag",
-  number: "01", // Sesuaikan nomor urut
-  name: "Financial Report AI Analyzer",
-  role: "Machine Learning & Backend Engineer",
-  category: "fullstack", // "frontend" | "backend" | "fullstack"
-  featured: true,        // Set true agar muncul di Homepage
-  status: "active",
-  experienceId: "nama-perusahaan-slug", // Opsional: kaitkan ke ID Experience jika relevan
-  experienceLabel: "Nama Perusahaan / Personal Project",
-  summary:
-    "Sistem AI berbasis Retrieval-Augmented Generation (RAG) yang menganalisis dokumen laporan keuangan tahunan, mengekstrak metrik kunci secara otomatis, dan menyediakan antarmuka tanya-jawab interaktif.",
-  highlights: [
-    "Membangun pipeline ekstraksi PDF dengan OCR dan chunking semantik",
-    "Integrasi vector database Qdrant dan model embeddings open-source",
-    "Mengembangkan REST API asinkron menggunakan FastAPI dan Redis queue",
-    "Mencapai akurasi ekstraksi informasi keuangan sebesar 94%",
-  ],
-  contributions: [
-    "Merancang arsitektur database relasional PostgreSQL untuk menyimpan riwayat analisis",
-    "Mengimplementasikan autentikasi JWT dan rate-limiting untuk keamanan API",
-    "Membangun antarmuka dashboard monitoring menggunakan Next.js dan Tailwind CSS",
-    "Melakukan deployment containerized menggunakan Docker dan Nginx",
-  ],
-  techStack: [
-    "Python",
-    "FastAPI",
-    "LangChain",
-    "Qdrant",
-    "PostgreSQL",
-    "Docker",
-    "Next.js",
-    "TypeScript",
-  ],
-  images: [
-    {
-      id: "ai-financial-rag-cover",
-      src: "/images/projects/ai-financial-rag/cover.webp",
-      alt: "Financial Report AI Analyzer Dashboard Overview",
-      label: "Dashboard Overview",
-      description: "Antarmuka dashboard analitik laporan keuangan dan chat RAG.",
-      isCover: true, // Gambar sampul utama
-    },
-    {
-      id: "ai-financial-rag-rag",
-      src: "/images/projects/ai-financial-rag/pipeline.webp",
-      alt: "Vector Search & Retrieval Flow",
-      label: "RAG Pipeline",
-      description: "Visualisasi proses pencarian dokumen pada vector store.",
-      isCover: false,
-    },
-  ],
-  link: {
-    liveUrl: "https://demo-proyek-anda.com", // atau "" jika tidak ada
-    githubUrl: "https://github.com/rfirmn/nama-repo", // atau "" jika repo privat
-  },
-  updatedAt: new Date().toISOString(),
-},
-```
+Slate dan BrandLens memakai Swift/UIKit; Personal Money Tracker memakai Swift/SwiftUI. Rantang memakai Flutter/Dart untuk Android dan iOS, serta Next.js untuk web. Implementasi mobile Rantang dikonfirmasi di `../rantang/development/apps/mobile/`; galeri yang tersedia di dokumentasi saat ini tetap screenshot web, termasuk layar web responsif.
+
+### 2. Struktur data dan cara menambah proyek
+
+Gunakan tipe `ProjectItem` dan `ProjectImage` di `src/data/projects.ts` sebagai sumber struktur terbaru. Salin salah satu entri, lalu sesuaikan:
+
+- `id`, `databaseId`, dan `number`: identitas unik serta urutan proyek; urutan array menentukan urutan tampilan.
+- `name`, `tagline`, `role`, dan `status`: judul, proposisi produk, kontribusi Anda, serta tahap pengembangan sebenarnya.
+- `category`: `ai`, `fullstack`, atau `ios`. Label tampilan diatur di `PROJECT_CATEGORIES`.
+- `featured`: hanya tiga proyek AI utama saat ini memakai `true`.
+- `summary` dan `highlights`: ringkasan serta sorotan teknis yang tampil langsung pada kartu.
+- `problem`, `contributions`, `engineeringDecision`, `impactSummary`, dan `scope`: isi studi kasus, termasuk konteks demo dan batas verifikasi.
+- `impactStats`: nilai dan label yang lengkap; UI tidak menambahkan tanda `+` atau `%` otomatis. Gunakan ukuran/fakta yang didukung dokumentasi, bukan angka dampak yang belum diukur.
+- `techStack`: teknologi yang dipakai implementasi saat ini.
+- `images`: galeri dengan tepat satu `isCover: true`, `id` unik, `src`, `alt`, `label`, dan `description`. Tambahkan `format: "portrait"` untuk screenshot mobile.
+- `link.githubUrl`: isi hanya jika repositori publik diketahui. Gunakan `null` bila belum tersedia; hindari URL localhost pada portofolio publik.
+- `updatedAt`: waktu pembaruan isi.
+
+Tautan `/projects#[id]` membuka kartu proyek tertentu. Kontribusi dan keputusan teknis tampil pada disclosure **Explore the case study**. Galeri bersama di `src/components/projects/ProjectGallery.tsx` menyediakan navigasi screenshot, caption, serta tautan gambar ukuran penuh.
 
 ---
 
@@ -202,7 +145,7 @@ public/
 
 ### 2. Standar Gambar yang Disarankan:
 - **Format:** `.webp` (sangat direkomendasikan untuk loading super cepat) atau `.png`.
-- **Rasio Aspek:** **16:9** atau **16:10** (contoh ukuran: `1440x900px` atau `1920x1080px`).
+- **Rasio Aspek:** Pertahankan rasio screenshot asli. Galeri memakai `object-contain` agar layar tidak terpotong; screenshot mobile memakai `format: "portrait"`.
 - **Kompresi:** Usahakan ukuran per file di bawah **300 KB** agar animasi browser tetap berjalan 60 FPS tanpa jeda rendering.
 - **Tampilan di Browser:** Mockup layar web penuh atau tangkapan layar bersih tanpa border berlebih.
 
@@ -217,11 +160,14 @@ Setelah Anda mengedit berkas data atau menambahkan gambar:
    npm run dev
    ```
 2. **Cek Tampilan di Browser:**
-   - Buka `http://localhost:3000/#experience` untuk melihat perubahan kartu Experience dan scroll horizontalnya.
+   - Bagian Experience tetap tersembunyi sampai data asli diisi dan komponennya diaktifkan kembali.
    - Buka `http://localhost:3000/#projects` untuk melihat proyek featured di Homepage.
-   - Buka `http://localhost:3000/projects` untuk memastikan filter kategori (*All, Frontend, Backend, Fullstack*) dan galeri arsip proyek berfungsi normal.
-3. **Uji Kompilasi TypeScript (Production Build Test):**
+   - Buka `http://localhost:3000/#ios-projects` untuk melihat kelompok tiga proyek Swift.
+   - Buka `http://localhost:3000/projects` untuk memastikan filter kategori (*All projects, Applied AI, Swift / iOS, Flutter & Web*) dan galeri arsip proyek berfungsi normal.
+3. **Validasi sebelum deploy:**
    ```bash
+   npm run lint
+   npm run typecheck
    npm run build
    ```
-   *Jika perintah selesai dengan `Route (app) ... Compiled successfully`, berarti seluruh data baru Anda 100% valid dan siap di-deploy.*
+   Build memvalidasi kompilasi dan rendering rute. Tetap periksa galeri, filter, studi kasus, dan tampilan mobile sebelum deployment.

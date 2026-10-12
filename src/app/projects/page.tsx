@@ -7,7 +7,7 @@ import { PROFILE } from "@/data";
 
 export const metadata: Metadata = {
   title: `Projects | ${PROFILE.name}`,
-  description: `Explore digital products, internal systems, and web applications built by ${PROFILE.name}.`,
+  description: `Explore ${PROFILE.name}'s applied AI work: Strata PDA, Streamly, and Market Intelligence; Swift iOS apps Slate, BrandLens, and Personal Money Tracker; and Rantang for Flutter Android/iOS and web.`,
 };
 
 export default function ProjectsPage() {

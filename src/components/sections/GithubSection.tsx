@@ -32,34 +32,34 @@ export function GithubSection() {
   useEffect(() => {
     let isMounted = true;
 
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        const age = Date.now() - (parsed.timestamp || 0);
-
-        // If cached within the last 7 days, use it directly without API fetch
-        if (age < ONE_WEEK_MS && parsed.data) {
-          if (isMounted) {
-            setLiveStats({
-              total: parsed.data.total,
-              streak: parsed.data.longestStreakDays,
-              active: parsed.data.activeDays,
-            });
-            if (parsed.data.svg) {
-              setSvgHtml(parsed.data.svg);
-            }
+    async function loadContributions() {
+      try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          const age = Date.now() - (parsed.timestamp || 0);
+          if (age >= 0 && age < ONE_WEEK_MS && parsed.data?.success) {
+            return parsed.data;
           }
-          return;
+        }
+      } catch {
+        // LocalStorage unavailable, proceed to fetch.
+      }
+
+      const response = await fetch("/api/github");
+      if (!response.ok) throw new Error(`GitHub sync returned ${response.status}`);
+      const data = await response.json();
+      if (data?.success) {
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data }));
+        } catch {
+          // Ignore quota/storage errors.
         }
       }
-    } catch {
-      // LocalStorage unavailable, proceed to fetch
+      return data;
     }
 
-    // Cache expired (> 7 days) or missing: fetch /api/github
-    fetch("/api/github")
-      .then((res) => res.json())
+    loadContributions()
       .then((data) => {
         if (!isMounted || !data?.success) return;
 
@@ -71,15 +71,6 @@ export function GithubSection() {
 
         if (data.svg) {
           setSvgHtml(data.svg);
-        }
-
-        try {
-          localStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify({ timestamp: Date.now(), data })
-          );
-        } catch {
-          // Ignore quota/storage errors
         }
       })
       .catch((err) => {

@@ -1,80 +1,66 @@
-<div align="center">
-  <h1>Rio Firman Raharja</h1>
-  <p><strong>Machine Learning & Full-Stack Engineer</strong></p>
-  <p>Building intelligent software systems at the intersection of AI, machine learning, and scalable backend engineering.</p>
+# Rio Firman Raharja — Portfolio
 
-  <p>
-    <a href="https://github.com/rfirmn"><strong>Explore Live Site »</strong></a>
-    <br />
-    <br />
-    <a href="mailto:firmanrio59@gmail.com">Get in Touch</a>
-    ·
-    <a href="https://www.linkedin.com/in/rio-firman/">LinkedIn</a>
-    ·
-    <a href="https://drive.google.com/file/d/1eOImNhn3X_4PeXY8WZlqrZ_OIiISacZJ/view?usp=sharing">Resume</a>
-  </p>
-</div>
+Portofolio Applied AI dan iOS dengan Next.js 16, React 19, TypeScript, Tailwind CSS 4, GSAP, dan Lenis.
 
----
+- **Applied AI:** Strata PDA, Streamly, Market Intelligence.
+- **Swift / iOS:** Slate, BrandLens, Personal Money Tracker.
+- **Flutter & Web:** Rantang untuk Android, iOS, dan web.
 
-## 🎯 About This Repository
+Bagian Experience disembunyikan dan datanya kosong sampai pengalaman asli ditambahkan.
 
-This repository houses the source code for my personal portfolio website. Built with modern creative development engineering, it focuses on fluid interactions, high runtime performance, and a decoupled architecture between content and presentation.
+## Menjalankan lokal
 
-### Core Architecture & Engineering Highlights:
-- **Physics-Based Kinetic Scroll:** Integrated [Lenis](https://lenis.darkroom.engineering/) and [GSAP ScrollTrigger](https://greensock.com/) to deliver 60fps momentum scrolling, curved horizon morphs, and scrub-synchronized reveals while respecting native browser accessibility.
-- **Data-Driven Decoupling:** All content (persona, narrative manifesto, skills, career history, and project showcases) is strictly typed in TypeScript and isolated in `src/data/`, allowing content iteration without modifying core UI logic.
-- **Smart Weekly GitHub Sync:** Custom Next.js route handler (`/api/github`) with 7-day Incremental Static Regeneration (`s-maxage=604800`) paired with client-side `localStorage` caching to eliminate rate-limit risks while keeping contribution statistics fresh.
-- **Responsive Architecture:** Fully adaptive responsive layouts supporting ultra-wide desktop monitors down to mobile viewports.
-
----
-
-## 🛠️ Tech Stack
-
-- **Core Framework:** Next.js 16 (App Router, Turbopack)
-- **Language & Runtime:** TypeScript, React 19, Node.js
-- **Styling & Design System:** Tailwind CSS v4, Vanilla CSS Custom Tokens
-- **Motion & Interactions:** GSAP, ScrollTrigger, Lenis Smooth Scroll
-- **Deployment & Hosting:** Vercel
-
----
-
-## 💻 Local Development
-
-To run this project locally on your development environment:
+Gunakan Node.js 20.9 atau lebih baru dan npm. Versi dependency dikunci di `package-lock.json`.
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/rfirmn/my-portofolio.git
-
-# 2. Install dependencies
-cd my-portofolio
-npm install
-
-# 3. Start development server
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+Buka `http://localhost:3000`. Hentikan server dengan `Ctrl+C`.
 
-### Production Build:
+## Validasi produksi
+
 ```bash
+npm run lint
+npm run typecheck
 npm run build
 npm run start
 ```
 
----
+`npm run start` menjalankan hasil build produksi. Proses build memerlukan koneksi internet untuk mengambil font Google yang kemudian disajikan oleh aplikasi.
 
-## 📬 Contact & Opportunities
+## Deploy
 
-I am open to discussions regarding engineering opportunities, collaborations, and projects in Machine Learning, Applied AI, and Backend Systems.
+Proyek memakai optimasi gambar Next.js dan route `/api/github`. Gunakan hosting yang mendukung runtime Next.js/Node.js; jangan memakai static export tanpa menyesuaikan kedua fitur tersebut.
 
-- **Email:** [firmanrio59@gmail.com](mailto:firmanrio59@gmail.com)
-- **LinkedIn:** [linkedin.com/in/rio-firman](https://www.linkedin.com/in/rio-firman/)
-- **GitHub:** [@rfirmn](https://github.com/rfirmn)
+### Vercel
 
----
+1. Impor repository dengan root directory proyek ini dan framework **Next.js**.
+2. Gunakan install command `npm ci` dan build command `npm run build`. Biarkan output directory mengikuti preset Next.js.
+3. Isi `NEXT_PUBLIC_SITE_URL` dengan URL publik final, misalnya `https://your-domain.com`, untuk metadata Open Graph.
+4. Jalankan deploy dari dashboard hosting.
 
-<div align="center">
-  <sub>© 2026 Rio Firman Raharja. All rights reserved. Personal portfolio design and codebase.</sub>
-</div>
+### Hosting Node.js
+
+```bash
+npm ci
+npm run build
+npm run start
+```
+
+Atur `NEXT_PUBLIC_SITE_URL` sebelum build dan `PORT` bila hosting memerlukan port tertentu. Gunakan process manager yang disediakan hosting untuk menjalankan server produksi.
+
+Tidak ada database atau API key yang wajib dikonfigurasi. `/api/github` mengambil kontribusi akun `rfirmn` melalui API publik pihak ketiga dan menggunakan snapshot lokal bila layanan tidak tersedia. Data dicache selama satu minggu. Domain metadata dapat dikonfigurasi mengikuti contoh `.env.example`; jangan commit `.env.local`.
+
+## Mengubah konten
+
+- `src/data/profile.ts`: identitas, bio, skills, kontak, tautan CV, dan metadata.
+- `src/data/projects.ts`: deskripsi, kategori, studi kasus, dan galeri tujuh proyek.
+- `public/images/projects/`: screenshot proyek yang siap disajikan saat deploy.
+- `public/images/avatar/profile.png`: foto profil.
+- `public/icon.svg`: favicon berinisial R.
+
+Panduan lengkap tersedia di [panduan konten](docs/GUIDE_UPDATE_PROJECTS_AND_EXPERIENCE.md).
+
+Source proyek lain dan direktori `porto_documentation` tidak diperlukan di server deploy; aset yang digunakan sudah berada di `public/`.
